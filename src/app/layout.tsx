@@ -18,9 +18,9 @@ export const metadata: Metadata = {
   title: "Next.js Boilerplate",
   description: "A modern Next.js boilerplate with TypeScript, Tailwind CSS, and pre-built components",
   keywords: ["next.js", "react", "typescript", "tailwind css", "boilerplate"],
-  authors: [{ name: "Your Name" }],
-  creator: "Your Name",
-  publisher: "Your Company",
+  authors: [{ name: "Chasers, LLC" }],
+  creator: "Chasers, LLC",
+  publisher: "Chasers, LLC",
 };
 
 export default function RootLayout({

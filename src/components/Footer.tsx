@@ -135,7 +135,7 @@ export const Footer = (): React.ReactElement => {
         </div>
         
         <div className="border-t border-gray-200 dark:border-gray-800 mt-12 pt-8 text-center text-gray-600 dark:text-gray-300">
-          <p>© {new Date().getFullYear()} Your Company. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Chasers, LLC. All rights reserved.</p>
         </div>
       </Container>
     </footer>
