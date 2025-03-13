@@ -1,0 +1,38 @@
+name: Template Cleanup
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    if: github.event.repository.name != 'nextjs-boilerplate'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Update project name
+        run: |
+          echo "Updating project name to ${{ github.event.repository.name }}"
+          sed -i "s/nextjs-boilerplate/${{ github.event.repository.name }}/g" package.json
+          sed -i "s/nextjs-boilerplate/${{ github.event.repository.name }}/g" README.md
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Initialize project from template" || echo "No changes to commit"
+          git push 
