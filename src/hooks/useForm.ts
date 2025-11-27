@@ -14,7 +14,7 @@ interface UseFormOptions<T> {
  * @param {UseFormOptions<T>} options - The form options
  * @returns {Object} Form state and handlers
  */
-export function useForm<T extends Record<string, any>>({
+export function useForm<T extends Record<string, unknown>>({
   initialValues,
   onSubmit,
   validate,
@@ -113,7 +113,7 @@ export function useForm<T extends Record<string, any>>({
    * @param {keyof T} name - The field name
    * @param {any} value - The field value
    */
-  const setFieldValue = (name: keyof T, value: any) => {
+  const setFieldValue = (name: keyof T, value: T[keyof T]) => {
     setValues((prev) => ({ ...prev, [name]: value }));
   };
 

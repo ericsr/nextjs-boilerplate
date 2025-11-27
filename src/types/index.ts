@@ -117,5 +117,5 @@ export interface FormField {
   required?: boolean;
   disabled?: boolean;
   options?: { label: string; value: string | number }[];
-  validation?: (value: any, allValues?: Record<string, any>) => string | undefined;
+  validation?: (value: unknown, allValues?: Record<string, unknown>) => string | undefined;
 } 

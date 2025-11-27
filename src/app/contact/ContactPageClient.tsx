@@ -16,7 +16,7 @@ export default function ContactPageClient() {
             <h2 className="text-2xl font-semibold mb-6">Get in Touch</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
               Have questions about our Next.js boilerplate? Want to share your feedback or suggestions?
-              We'd love to hear from you! Fill out the form and we'll get back to you as soon as possible.
+              We&apos;d love to hear from you! Fill out the form and we&apos;ll get back to you as soon as possible.
             </p>
             
             <div className="space-y-4">

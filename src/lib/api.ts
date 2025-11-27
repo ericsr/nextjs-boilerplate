@@ -46,7 +46,7 @@ export function get<T>(url: string, options?: RequestInit): Promise<T> {
  * @param {RequestInit} options - Additional fetch options
  * @returns {Promise<T>} The parsed response data
  */
-export function post<T>(url: string, data: any, options?: RequestInit): Promise<T> {
+export function post<T>(url: string, data: unknown, options?: RequestInit): Promise<T> {
   return fetchApi<T>(url, {
     method: 'POST',
     body: JSON.stringify(data),
@@ -62,7 +62,7 @@ export function post<T>(url: string, data: any, options?: RequestInit): Promise<
  * @param {RequestInit} options - Additional fetch options
  * @returns {Promise<T>} The parsed response data
  */
-export function put<T>(url: string, data: any, options?: RequestInit): Promise<T> {
+export function put<T>(url: string, data: unknown, options?: RequestInit): Promise<T> {
   return fetchApi<T>(url, {
     method: 'PUT',
     body: JSON.stringify(data),

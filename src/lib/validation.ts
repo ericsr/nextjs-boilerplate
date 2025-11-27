@@ -65,7 +65,7 @@ export const matchesPattern = (pattern: RegExp, errorMessage: string) => (
  */
 export const matchesField = (field: string, fieldName: string) => (
   value: string,
-  allValues: Record<string, any>
+  allValues: Record<string, unknown>
 ): string | undefined => {
   return value !== allValues[field] ? `Must match ${fieldName}` : undefined;
 };
@@ -77,8 +77,8 @@ export const matchesField = (field: string, fieldName: string) => (
  * @returns {(value: string, allValues?: Record<string, any>) => string|undefined} Combined validation function
  */
 export const composeValidators = (
-  ...validators: Array<(value: string, allValues?: Record<string, any>) => string | undefined>
-) => (value: string, allValues?: Record<string, any>): string | undefined => {
+  ...validators: Array<(value: string, allValues?: Record<string, unknown>) => string | undefined>
+) => (value: string, allValues?: Record<string, unknown>): string | undefined => {
   for (const validator of validators) {
     const error = validator(value, allValues);
     if (error) {

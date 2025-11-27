@@ -5,7 +5,7 @@ import { Button } from './Button';
 import { useForm } from '@/hooks/useForm';
 import { validation } from '@/lib/validation';
 
-interface ContactFormValues {
+interface ContactFormValues extends Record<string, unknown> {
   name: string;
   email: string;
   message: string;

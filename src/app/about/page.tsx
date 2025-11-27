@@ -50,7 +50,7 @@ export default function AboutPage() {
             you can use to build your application faster.
           </p>
           <p className="text-gray-600 dark:text-gray-300">
-            Whether you're building a personal project, a startup, or an enterprise application, 
+            Whether you&apos;re building a personal project, a startup, or an enterprise application,
             this boilerplate provides a solid foundation that you can build upon.
           </p>
         </div>
