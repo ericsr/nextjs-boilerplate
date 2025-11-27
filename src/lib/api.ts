@@ -1,10 +1,49 @@
 /**
+ * Custom API error class with sanitized messages
+ */
+export class ApiError extends Error {
+  public readonly status: number;
+  public readonly statusText: string;
+
+  constructor(status: number, statusText: string, message?: string) {
+    // Use generic messages to avoid leaking server details
+    const safeMessage = message || ApiError.getSafeMessage(status);
+    super(safeMessage);
+    this.name = 'ApiError';
+    this.status = status;
+    this.statusText = statusText;
+  }
+
+  static getSafeMessage(status: number): string {
+    switch (status) {
+      case 400:
+        return 'Invalid request. Please check your input.';
+      case 401:
+        return 'Authentication required. Please log in.';
+      case 403:
+        return 'You do not have permission to perform this action.';
+      case 404:
+        return 'The requested resource was not found.';
+      case 429:
+        return 'Too many requests. Please try again later.';
+      case 500:
+      case 502:
+      case 503:
+      case 504:
+        return 'A server error occurred. Please try again later.';
+      default:
+        return 'An unexpected error occurred. Please try again.';
+    }
+  }
+}
+
+/**
  * Fetches data from an API endpoint
- * 
+ *
  * @param {string} url - The URL to fetch from
  * @param {RequestInit} options - Fetch options
  * @returns {Promise<T>} The parsed response data
- * @throws {Error} If the request fails
+ * @throws {ApiError} If the request fails
  */
 export async function fetchApi<T>(url: string, options?: RequestInit): Promise<T> {
   const response = await fetch(url, {
@@ -15,8 +54,14 @@ export async function fetchApi<T>(url: string, options?: RequestInit): Promise<T
   });
 
   if (!response.ok) {
-    const error = await response.text();
-    throw new Error(error || `API request failed with status ${response.status}`);
+    // Don't expose raw server error messages to users
+    // Log the actual error server-side for debugging
+    if (process.env.NODE_ENV === 'development') {
+      const errorText = await response.text().catch(() => '');
+      console.error(`API Error [${response.status}]:`, errorText);
+    }
+
+    throw new ApiError(response.status, response.statusText);
   }
 
   // For empty responses

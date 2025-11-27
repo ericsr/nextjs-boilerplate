@@ -3,13 +3,43 @@
 import { useState, useEffect } from 'react';
 
 /**
+ * Safely parse JSON with validation
+ * Returns undefined if parsing fails or data is invalid
+ */
+function safeJsonParse<T>(value: string | null, validator?: (data: unknown) => data is T): T | undefined {
+  if (value === null) {
+    return undefined;
+  }
+
+  try {
+    const parsed = JSON.parse(value);
+
+    // If a validator is provided, use it to validate the parsed data
+    if (validator && !validator(parsed)) {
+      console.warn('localStorage data failed validation');
+      return undefined;
+    }
+
+    return parsed as T;
+  } catch {
+    console.warn('Failed to parse localStorage JSON');
+    return undefined;
+  }
+}
+
+/**
  * Custom hook for managing state in localStorage
- * 
+ *
  * @param {string} key - The localStorage key
  * @param {T} initialValue - The initial value
+ * @param {function} validator - Optional validation function for stored data
  * @returns {[T, (value: T | ((val: T) => T)) => void]} State and setter
  */
-export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T | ((val: T) => T)) => void] {
+export function useLocalStorage<T>(
+  key: string,
+  initialValue: T,
+  validator?: (data: unknown) => data is T
+): [T, (value: T | ((val: T) => T)) => void] {
   // Get from local storage then parse stored json or return initialValue
   const readValue = (): T => {
     // Prevent build error "window is undefined" but keep working
@@ -19,7 +49,8 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T 
 
     try {
       const item = window.localStorage.getItem(key);
-      return item ? (JSON.parse(item) as T) : initialValue;
+      const parsed = safeJsonParse<T>(item, validator);
+      return parsed !== undefined ? parsed : initialValue;
     } catch (error) {
       console.warn(`Error reading localStorage key "${key}":`, error);
       return initialValue;
@@ -55,7 +86,11 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T 
   useEffect(() => {
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === key && event.newValue) {
-        setStoredValue(JSON.parse(event.newValue));
+        const parsed = safeJsonParse<T>(event.newValue, validator);
+        if (parsed !== undefined) {
+          setStoredValue(parsed);
+        }
+        // If parsing fails, keep the current value rather than corrupting state
       }
     };
 
@@ -64,7 +99,7 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T 
     return () => {
       window.removeEventListener('storage', handleStorageChange);
     };
-  }, [key]);
+  }, [key, validator]);
 
   return [storedValue, setValue];
 }
